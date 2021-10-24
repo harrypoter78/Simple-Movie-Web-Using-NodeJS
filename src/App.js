@@ -1,21 +1,31 @@
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import Home from "./pages/Home/Home";
 import AMenu from "./pages/AMenu/AMenu";
 import BMenu from "./pages/BMenu/BMenu";
+import CMenu from "./pages/CMenu/CMenu";
+import DMenu from "./pages/DMenu/DMenu";
+import MovieDetail from "./pages/MovieDetail/MovieDetail";
+import Login from "./pages/Login/Login";
 
 function App() {
   return (
-    <div className="page-container">
+    <div className="min-h-screen flex flex-col text-center">
       <BrowserRouter>
         <Navbar />
-        <div className="content-wrap">
+        <div className="flex-grow py-14 px-32 bg-gray-50">
           <Switch>
             <Route path="/" exact component={Home}></Route>
             <Route path="/a-menu" component={AMenu}></Route>
             <Route path="/b-menu" component={BMenu}></Route>
+            <Route path="/c-menu" component={CMenu}></Route>
+            <Route path="/d-menu" component={DMenu}></Route>
+            <Route path="/login" component={Login}></Route>
+            <Route
+              path="/movie-detail/:movie_id"
+              component={MovieDetail}
+            ></Route>
           </Switch>
         </div>
       </BrowserRouter>

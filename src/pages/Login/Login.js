@@ -1,18 +1,17 @@
 import React from "react";
 import { Helmet } from "react-helmet";
-// import './BMenu.css';
 
-function BMenu() {
+function Login() {
   return (
     <div className="py-28">
       <Helmet>
-        <title>B Menu</title>
+        <title>Login</title>
       </Helmet>
       <div className="font-weight-bold h-20">
-        <p>This is B Page</p>
+        <p>This is Login Page</p>
       </div>
     </div>
   );
 }
 
-export default BMenu;
+export default Login;
