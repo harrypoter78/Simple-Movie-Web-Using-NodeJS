@@ -1,17 +1,19 @@
-import React from "react";
-import { Helmet } from "react-helmet";
+import React, { Component } from "react";
+import { Helmet } from "react-helmet-async";
 
-function CMenu() {
-  return (
-    <div className="py-28">
-      <Helmet>
-        <title>C Menu</title>
-      </Helmet>
-      <div className="font-weight-bold h-20">
-        <p>This is C Page</p>
+class CMenu extends Component {
+  render() {
+    return (
+      <div className="py-28">
+        <Helmet>
+          <title>C Menu</title>
+        </Helmet>
+        <div className="font-weight-bold h-20">
+          <p>This is C Page</p>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default CMenu;

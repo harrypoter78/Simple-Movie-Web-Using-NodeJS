@@ -1,18 +1,19 @@
-import React from "react";
-import { Helmet } from "react-helmet";
-// import './BMenu.css';
+import React, { Component } from "react";
+import { Helmet } from "react-helmet-async";
 
-function BMenu() {
-  return (
-    <div className="py-28">
-      <Helmet>
-        <title>B Menu</title>
-      </Helmet>
-      <div className="font-weight-bold h-20">
-        <p>This is B Page</p>
+class BMenu extends Component {
+  render() {
+    return (
+      <div className="py-28">
+        <Helmet>
+          <title>B Menu</title>
+        </Helmet>
+        <div className="font-weight-bold h-20">
+          <p>This is B Page</p>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default BMenu;
