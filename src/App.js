@@ -8,6 +8,7 @@ import CMenu from "./pages/CMenu/CMenu";
 import DMenu from "./pages/DMenu/DMenu";
 import MovieDetail from "./pages/MovieDetail/MovieDetail";
 import Login from "./pages/Login/Login";
+import Logout from "./components/Logout/Logout";
 import { HelmetProvider } from "react-helmet-async";
 import { Component } from "react";
 
@@ -27,6 +28,7 @@ class App extends Component {
                 <Route path="/c-menu" component={CMenu}></Route>
                 <Route path="/d-menu" component={DMenu}></Route>
                 <Route path="/login" component={Login}></Route>
+                <Route path="/logout" component={Logout} />
                 <Route
                   path="/movie-detail/:movie_id"
                   component={MovieDetail}

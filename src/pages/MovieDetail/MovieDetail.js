@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Helmet } from "react-helmet-async";
 import Axios from "axios";
 import { connect } from "react-redux";
-const { baseURL, API_KEY, session_id, imgURL } = require("../../Config");
+const { baseMovieURL, API_KEY, imgURL } = require("../../Config");
 
 class MovieDetail extends Component {
   constructor(props) {
@@ -14,6 +14,7 @@ class MovieDetail extends Component {
       rating: "",
       ratingState: "",
       // movie_id: "",
+      loading: false,
     };
     this.showPostRatingInput = this.showPostRatingInput.bind(this);
     this.showDropMenu = this.showDropMenu.bind(this);
@@ -30,14 +31,17 @@ class MovieDetail extends Component {
   }
 
   getMovieData(movie_id) {
-    Axios.get(baseURL + `${movie_id}` + API_KEY).then((res) => {
+    Axios.get(baseMovieURL + `${movie_id}?api_key=${API_KEY}`).then((res) => {
       this.setState({ detail: res.data });
     });
-    Axios.get(
-      baseURL + `${movie_id}/account_states` + API_KEY + session_id
-    ).then((res) => {
-      this.setState({ ratingState: res.data.rated.value });
-    });
+    if (this.props.session_id) {
+      Axios.get(
+        baseMovieURL +
+          `${movie_id}/account_states?api_key=${API_KEY}&session_id=${this.props.session_id}`
+      ).then((res) => {
+        this.setState({ ratingState: res.data.rated.value });
+      });
+    }
   }
 
   componentDidMount() {
@@ -47,13 +51,15 @@ class MovieDetail extends Component {
   }
 
   postMovieRating() {
+    this.setState({ loading: true });
     Axios.post(
-      baseURL + `${this.props.movie_id}/rating` + API_KEY + session_id,
+      baseMovieURL +
+        `${this.props.movie_id}/rating?api_key=${API_KEY}&session_id=${this.props.session_id}`,
       {
         value: this.state.rating,
       }
     ).then((res) => {
-      alert("Rating posted!");
+      this.setState({ loading: false });
       this.setState({ rating: res.data });
     });
     this.setState({ ratingState: this.state.rating });
@@ -61,21 +67,27 @@ class MovieDetail extends Component {
   }
 
   deleteMovieRating() {
+    this.setState({ loading: true });
     Axios.delete(
-      baseURL + `${this.props.movie_id}/rating` + API_KEY + session_id
+      baseMovieURL +
+        `${this.props.movie_id}/rating?api_key=${API_KEY}&session_id=${this.props.session_id}`
     ).then(() => {
+      this.setState({ loading: false });
       if (!this.state.ratingState) {
-        alert("Movies are not rated yet.");
+        alert("Movie has not rated yet.");
       } else {
-        alert("Rating deleted!");
         this.setState({ ratingState: "" });
       }
     });
   }
 
   render() {
-    console.log(this.props.movie_id);
-    if (!this.state.detail) return null;
+    if (!this.state.detail)
+      return (
+        <div className="py-24 flex place-content-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-green-500"></div>
+        </div>
+      );
 
     return (
       <div>
@@ -84,6 +96,7 @@ class MovieDetail extends Component {
         </Helmet>
 
         {/* Page Content */}
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-0">
           <div className="px-4 h-72 w-64 lg:h-full lg:w-full mx-auto ">
             <img
@@ -109,62 +122,77 @@ class MovieDetail extends Component {
               Popularity : {this.state.detail.popularity}
             </p>
 
-            <ul className="flex list-none font-normal pt-2">
-              <li className="mr-2">
-                {" "}
-                {!this.state.ratingState ? (
-                  <p>Rating : No Rating</p>
-                ) : (
-                  <p>Rating : {this.state.ratingState}</p>
-                )}
-              </li>
-              <li>
-                {" "}
-                <button onClick={this.showPostRatingInput}>
-                  {this.state.PostRatingInput ? (
-                    <i className="fas fa-caret-left fa-lg text-green-600"></i>
-                  ) : (
-                    <i className="fas fa-plus text-green-600"></i>
-                  )}
-                </button>
-              </li>
-              <li>
-                {/* Hidden Menu */}
-                <div className="block">
-                  {this.state.PostRatingInput ? (
-                    <div className="flex items-center">
-                      <input
-                        className="shadow appearance-none border rounded w-12 text-gray-700 leading-tight text-center"
-                        id="movie_rating"
-                        type="text"
-                        onChange={(event) =>
-                          this.setState({ rating: event.target.value })
-                        }
-                      ></input>
-
-                      <button className="px-2" onClick={this.postMovieRating}>
-                        <i className="fas fa-plus text-green-600"></i>
-                      </button>
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              </li>
-
-              <li>
-                <button className="ml-2" onClick={this.deleteMovieRating}>
-                  <i className="fas fa-minus text-red-600"></i>
-                </button>
-              </li>
-            </ul>
-
             <p className="font-normal mt-2">
-              Vote Average : {this.state.detail.vote_average}
+              IMDB Rating : {this.state.detail.vote_average}
             </p>
             <p className="font-normal mt-2">
               Vote Count : {this.state.detail.vote_count}
             </p>
+
+            {this.props.session_id && (
+              <ul className="flex list-none font-normal pt-2">
+                <li className="mr-2">
+                  {!this.state.ratingState ? (
+                    <p>Your Rating : No Rating</p>
+                  ) : (
+                    <p>Your Rating : {this.state.ratingState}</p>
+                  )}
+                </li>
+                {this.state.loading ? (
+                  <div className="flex place-content-center">
+                    <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-green-500"></div>
+                  </div>
+                ) : (
+                  <div className="flex">
+                    <li>
+                      <button onClick={this.showPostRatingInput}>
+                        {this.state.PostRatingInput ? (
+                          <i className="fas fa-caret-left fa-lg text-green-600"></i>
+                        ) : (
+                          <i className="fas fa-plus text-green-600"></i>
+                        )}
+                      </button>
+                    </li>
+
+                    <li>
+                      {/* Hidden Menu */}
+                      <div className="block">
+                        {this.state.PostRatingInput && (
+                          <div className="flex items-center">
+                            <input
+                              className="shadow appearance-none border rounded w-12 text-gray-700 leading-tight text-center"
+                              id="movie_rating"
+                              type="text"
+                              onChange={(event) =>
+                                this.setState({ rating: event.target.value })
+                              }
+                            ></input>
+
+                            <button
+                              className="px-2"
+                              onClick={this.postMovieRating}
+                            >
+                              <i className="fas fa-plus text-green-600"></i>
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </li>
+
+                    {this.props.session_id && (
+                      <li>
+                        <button
+                          className="ml-2"
+                          onClick={this.deleteMovieRating}
+                        >
+                          <i className="fas fa-minus text-red-600"></i>
+                        </button>
+                      </li>
+                    )}
+                  </div>
+                )}
+              </ul>
+            )}
           </div>
         </div>
 
@@ -228,7 +256,14 @@ function DropMenu() {
 const mapStateToProps = (state) => {
   return {
     movie_id: state.movie_id,
+    session_id: state.session_id,
   };
 };
 
-export default connect(mapStateToProps)(MovieDetail);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    dispatch,
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MovieDetail);

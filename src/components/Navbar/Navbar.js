@@ -46,21 +46,32 @@ class Navbar extends Component {
 
         <div className="flex">
           {/* Loged IN Username */}
-          <div className="px-6 flex items-center text-lg">
-            <p className="font-normal pr-2 mb-4">Welcome</p>
-            <div className="divide-y-4 divide-green-500">
-              <div className="font-bold">{this.props.username}</div>
-              <div></div>
+          {this.props.username && (
+            <div className="px-6 flex items-center text-lg">
+              <p className="font-normal pr-2 mb-4">Welcome</p>
+              <div className="divide-y-4 divide-green-500">
+                <div className="font-bold">{this.props.username}</div>
+                <div></div>
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="flex items-center">
+            {this.props.username && (
+              <Link to="/logout">
+                <button className="hidden lg:flex lg:flex-row px-5 py-2 mr-12 font-bold text-sm uppercase bg-red-600 hover:bg-red-800">
+                  Logout
+                </button>
+              </Link>
+            )}
             {/* Login Button */}
-            <Link to="/login">
-              <button className="hidden lg:flex lg:flex-row px-5 py-2 mr-12 font-bold text-sm uppercase bg-green-600 hover:bg-green-800">
-                Change Name
-              </button>
-            </Link>
+            {!this.props.username && (
+              <Link to="/login">
+                <button className="hidden lg:flex lg:flex-row px-5 py-2 mr-12 font-bold text-sm uppercase bg-green-600 hover:bg-green-800">
+                  Login
+                </button>
+              </Link>
+            )}
             <button onClick={this.showSideBar} className="mr-12 lg:hidden">
               {this.state.SideBarOpen ? (
                 <i className="far fa-times-circle fa-lg"></i>

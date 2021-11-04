@@ -14,16 +14,27 @@ import thunk from "redux-thunk";
 const globalState = {
   movie_id: "",
   username: "",
+  session_id: "",
 };
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["movie_id", "username"],
+  whitelist: ["movie_id", "username", "session_id"],
 };
 
 const rootReducer = (state = globalState, action) => {
   switch (action.type) {
+    case "ADD_SESSION_ID":
+      return {
+        ...state,
+        session_id: action.payload,
+      };
+    case "DELETE_SESSION_ID":
+      return {
+        ...state,
+        session_id: "",
+      };
     case "UPDATE_MOVIE_ID":
       return {
         ...state,
@@ -33,6 +44,11 @@ const rootReducer = (state = globalState, action) => {
       return {
         ...state,
         username: action.payload,
+      };
+    case "DELETE_USERNAME":
+      return {
+        ...state,
+        username: "",
       };
     default:
       return state;

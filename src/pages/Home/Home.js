@@ -17,12 +17,19 @@ class Home extends Component {
   handleSubmit(e) {
     e.preventDefault();
     Axios.get(
-      `https://api.themoviedb.org/3/find/${this.state.imdb_id}${API_KEY}&external_source=imdb_id`
+      `https://api.themoviedb.org/3/find/${this.state.imdb_id}?api_key=${API_KEY}&external_source=imdb_id`
     ).then((res) => {
       this.props.dispatch({
         type: "UPDATE_MOVIE_ID",
         payload: res.data.movie_results[0].id,
       });
+      // this.props.dispatch(() => {
+      //   Axios.get(
+      //     baseMovieURL + `${this.props.movie_id}?api_key=${API_KEY}`
+      //   ).then((e) => {
+      //     console.log(e.data.original_title);
+      //   });
+      // });
       this.props.history.push(`/movie-detail/${res.data.movie_results[0].id}`);
     });
   }
@@ -32,6 +39,7 @@ class Home extends Component {
   }
 
   render() {
+    console.log(this.props.session_id);
     return (
       <div className="py-28">
         <Helmet>
@@ -64,6 +72,7 @@ const mapStateToProps = (state) => {
   return {
     movie_id: state.movie_id,
     username: state.username,
+    session_id: state.session_id,
   };
 };
 
