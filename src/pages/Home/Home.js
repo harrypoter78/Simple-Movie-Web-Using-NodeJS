@@ -31,6 +31,10 @@ class Home extends Component {
       //   });
       // });
       this.props.history.push(`/movie-detail/${res.data.movie_results[0].id}`);
+    })
+    .catch((error) => {
+      this.props.history.push("/");
+      console.log('ID Not Found')
     });
   }
 
@@ -39,7 +43,6 @@ class Home extends Component {
   }
 
   render() {
-    console.log(this.props.session_id);
     return (
       <div className="py-28">
         <Helmet>

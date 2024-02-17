@@ -31,7 +31,7 @@ class Login extends Component {
         request_token: this.state.request_token,
       })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           this.setState({ request_token_login: res.data.request_token });
           Axios.post(baseAuthURL + `session/new?api_key=${API_KEY}`, {
             request_token: this.state.request_token_login,

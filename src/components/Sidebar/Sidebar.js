@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 
 class Sidebar extends Component {
   render() {
-    console.log(this.props.username);
+    // console.log(this.props.username);
     return (
       <div className="absolute top-16 inset-y-0 right-0 h-screen sm:w-1/4 lg:hidden bg-gray-500">
         <div className="flex flex-col">

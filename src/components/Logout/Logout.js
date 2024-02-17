@@ -5,8 +5,10 @@ const { baseAuthURL, API_KEY } = require("../../Config");
 
 class Logout extends Component {
   componentDidMount() {
-    Axios.post(baseAuthURL + `session/new?api_key=${API_KEY}`, {
-      session_id: this.props.session_id,
+    Axios.delete(baseAuthURL + `session?api_key=${API_KEY}`, {
+      data: {
+        session_id: this.props.session_id,
+      }
     }).then((res) => {
       this.props.dispatch({
         type: "DELETE_SESSION_ID",
@@ -26,9 +28,15 @@ class Logout extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    session_id: state.session_id,
+  };
+};
+
 const mapDispatchToProps = (dispatch) => {
   return {
     dispatch,
   };
 };
-export default connect(mapDispatchToProps)(Logout);
+export default connect(mapStateToProps, mapDispatchToProps)(Logout);
